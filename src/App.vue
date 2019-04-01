@@ -11,11 +11,15 @@
         ></el-option>
       </el-select>
     </div>
+    <div>
+      <el-radio v-model="typeElemintion" label="single">Single Elemintions</el-radio>
+      <el-radio v-model="typeElemintion" label="double">Double Elemintions</el-radio>
+    </div>
     <div class="bracket">
       <div class="main-bracket">
         <div class="type-bracket">UPPER BRACKET</div>
-        <div v-bind:class="['bracket-chart single-chart']"
-          v-bind:style="{ marginLeft: 242*(Math.log2(this.teamNumber) - 2) + 'px' }"
+        <div v-bind:class="['bracket-chart single-chart', typeElemintion === 'double' ? 'double-elemintion' : '']"
+          v-bind:style="[typeElemintion === 'single' ? {} : {marginLeft: 242*(Math.log2(this.teamNumber) - 2) + 'px'}]"
         >
           <div
             v-bind:class="`round ` + `round-` + index"
@@ -25,18 +29,20 @@
             <match v-for="(match, key) in getMatchNumberUpperRound(index)" :key="key"/>
           </div>
         </div>
-        <div class="type-bracket">LOWER BRACKET</div>
-        <div class="bracket-chart double-chart">
-          <div
-            v-bind:class="`round ` + `round-` + index"
-            v-for="(item, index) in roundNumberLower"
-            :key="index"
-          >
-            <match v-for="(match, key) in getMatchNumberLowerRound(index)" :key="key"/>
+        <div v-if="typeElemintion === 'double'">
+          <div class="type-bracket">LOWER BRACKET</div>
+          <div class="bracket-chart double-chart">
+            <div
+              v-bind:class="`round ` + `round-` + index"
+              v-for="(item, index) in roundNumberLower"
+              :key="index"
+            >
+              <match v-for="(match, key) in getMatchNumberLowerRound(index)" :key="key"/>
+            </div>
           </div>
         </div>
       </div>
-      <div class="final-block">
+      <div v-if="typeElemintion === 'double'" class="final-block">
         <match />
       </div>
     </div>
@@ -54,7 +60,7 @@ export default {
   data() {
     return {
       teamNumber: 8,
-      singleElemintion: true,
+      typeElemintion: 'single',
       roundNumber: 0,
       roundNumberLower: 0,
       count: 0,
@@ -261,21 +267,11 @@ export default {
         &::after {
           content: "";
           position: absolute;
-          width: 100%;
+          width: 50%;
           z-index: 2;
           height: 2px;
           background-color: gray;
           left: 0px;
-        }
-        &::before {
-          content: "";
-          position: absolute;
-          width: 2px;
-          z-index: 2;
-          height: 50%;
-          background-color: gray;
-          right: 0px;
-          bottom: 0px;
         }
       }
     }
@@ -313,6 +309,33 @@ export default {
             right: 0px;
             top: 0px;
           }
+        }
+      }
+    }
+  }
+}
+.double-elemintion {
+  .round {
+    &:last-child {
+      .match {
+        &::after {
+          content: "";
+          position: absolute;
+          width: 100%;
+          z-index: 2;
+          height: 2px;
+          background-color: gray;
+          left: 0px;
+        }
+        &::before {
+          content: "";
+          position: absolute;
+          width: 2px;
+          z-index: 2;
+          height: 50%;
+          background-color: gray;
+          right: 0px;
+          bottom: 0px;
         }
       }
     }
