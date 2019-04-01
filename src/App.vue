@@ -99,11 +99,11 @@ export default {
     }
   },
   created() {
-    //Ham tinh so round o nhanh thang
+    //Tinh so round o nhanh thang
 
     this.roundNumber = Math.log2(this.teamNumber);
 
-    //Ham tinh so round o nhanh thua 
+    //Tinh so round o nhanh thua 
 
     this.roundNumberLower = 2 * (Math.log2(this.teamNumber) - 1);
   },
