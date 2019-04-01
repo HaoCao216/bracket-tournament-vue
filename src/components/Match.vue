@@ -1,0 +1,76 @@
+<template>
+  <div class="match">
+    <div class="match-team">
+      <div class="home-team article">Up coming</div>
+      <div class="away-team article">Up coming</div>
+    </div>
+    <div class="date-time">
+      <span v-if="value === ''">Start Time</span>
+      <span v-else>{{ value | moment("dd, MM YY, h:mm a") }}</span>
+      <el-date-picker
+        v-model="value"
+        type="datetime"
+        placeholder="Select date and time"
+        default-time="12:00:00"
+      ></el-date-picker>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      value: ""
+    };
+  }
+};
+</script>
+
+<style lang="scss">
+.date-time {
+  height: 57px;
+  width: 100%;
+  color: #fff;
+  position: relative;
+  .el-date-editor {
+    opacity: 0;
+    position: absolute;
+    left: 0px;
+  }
+}
+</style>
+
+
+<style lang="scss" scoped>
+.match {
+  padding: 20px 7px 20px 25px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  .match-team {
+    background-color: #e5e5e5;
+    width: 140px;
+    position: relative;
+    z-index: 3;
+    .article {
+      padding: 7px 0px;
+    }
+  }
+  .date-time {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4a90e2;
+    width: 70px;
+    font-size: 11px;
+    font-weight: bold;
+    overflow: hidden;
+    z-index: 3;
+  }
+}
+.away-team {
+  border-top: 1px solid #fff;
+}
+</style>
