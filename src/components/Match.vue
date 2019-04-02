@@ -1,8 +1,14 @@
 <template>
   <div class="match">
     <div class="match-team">
-      <div class="home-team article">Up coming</div>
-      <div class="away-team article">Up coming</div>
+      <div class="select-team-winner">
+        <div v-bind:class="['home-team article', checkedHome ? 'is-winner' : '']">{{matchData.home_team || 'Up coming'}}</div>
+        <el-checkbox v-model="checkedHome" :disabled="!matchData.home_team"/>
+      </div>
+      <div class="select-team-winner away-group">
+        <div  v-bind:class="['away-team article', checkedAway ? 'is-winner' : '']">{{matchData.away_team || 'Up coming'}}</div>
+        <el-checkbox v-model="checkedAway" :disabled="!matchData.away_team"/>
+      </div>
     </div>
     <div class="date-time">
       <span v-if="value === ''">Start Time</span>
@@ -19,15 +25,43 @@
 
 <script>
 export default {
+  props: {
+    matchData: {
+      type: Object,
+      default: {}
+    },
+    selectWinner: Function
+  },
   data() {
     return {
-      value: ""
+      value: "",
+      checkedHome: false,
+      checkedAway: false,
     };
+  },
+  watch: {
+    checkedHome: function(value) {
+      if(value) {
+        this.checkedAway = false;
+        this.selectWinner(this.matchData.home_team, this.matchData);
+      }
+    },
+    checkedAway: function(value) {
+      if(value) {
+        this.checkedHome = false;
+        this.selectWinner(this.matchData.away_team, this.matchData)
+      }
+    },
   }
 };
 </script>
 
 <style lang="scss">
+.match {
+  .el-checkbox {
+    margin-right: 7px;
+  }
+}
 .date-time {
   height: 57px;
   width: 100%;
@@ -49,12 +83,22 @@ export default {
   display: flex;
   align-items: center;
   position: relative;
+  .is-winner {
+    font-weight: bold;
+    font-size: 12px;
+  }
   .match-team {
     background-color: #e5e5e5;
     width: 140px;
     position: relative;
     z-index: 3;
+    .select-team-winner {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
     .article {
+      width: 100%;
       padding: 7px 0px;
     }
   }
@@ -70,7 +114,7 @@ export default {
     z-index: 3;
   }
 }
-.away-team {
+.away-group {
   border-top: 1px solid #fff;
 }
 </style>
