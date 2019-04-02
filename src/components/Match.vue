@@ -44,12 +44,14 @@ export default {
       if(value) {
         this.checkedAway = false;
         this.selectWinner(this.matchData.home_team, this.matchData);
+      } else {
       }
     },
     checkedAway: function(value) {
       if(value) {
         this.checkedHome = false;
         this.selectWinner(this.matchData.away_team, this.matchData)
+      } else {
       }
     },
   }

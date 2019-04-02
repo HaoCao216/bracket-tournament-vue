@@ -237,6 +237,18 @@ export default {
     selectWinner(teamWinner, data) {
       this.matchData.find((item, index) => {
         if(data.parent === item.uuid) {
+          if(data.home_team === this.matchData[index].home_team) {
+            return this.matchData[index].home_team = teamWinner;
+          }
+          if(data.home_team === this.matchData[index].away_team) {
+            return this.matchData[index].away_team = teamWinner;
+          }
+          if(data.away_team === this.matchData[index].home_team) {
+            return this.matchData[index].home_team = teamWinner;
+          }
+          if(data.away_team === this.matchData[index].away_team) {
+            return this.matchData[index].away_team = teamWinner;
+          }
           if(this.matchData[index].home_team === null) {
             this.matchData[index].home_team = teamWinner;
           } else {
