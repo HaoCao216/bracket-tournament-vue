@@ -28,7 +28,7 @@ export default {
   props: {
     matchData: {
       type: Object,
-      default: {}
+      default: () => {}
     },
     selectWinner: Function
   },
@@ -88,6 +88,7 @@ export default {
   .is-winner {
     font-weight: bold;
     font-size: 12px;
+    color: green;
   }
   .match-team {
     background-color: #e5e5e5;
