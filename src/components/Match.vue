@@ -3,17 +3,18 @@
     <div class="match-team">
       <div class="select-team-winner">
         <div v-bind:class="['home-team article', checkedHome ? 'is-winner' : '']">{{matchData.home_team || 'Up coming'}}</div>
-        <el-checkbox v-model="checkedHome" :disabled="!matchData.home_team"/>
+        <el-checkbox v-model="checkedHome" :disabled="!matchData.home_team || value === ''"/>
       </div>
       <div class="select-team-winner away-group">
         <div  v-bind:class="['away-team article', checkedAway ? 'is-winner' : '']">{{matchData.away_team || 'Up coming'}}</div>
-        <el-checkbox v-model="checkedAway" :disabled="!matchData.away_team"/>
+        <el-checkbox v-model="checkedAway" :disabled="!matchData.away_team || value === ''"/>
       </div>
     </div>
     <div class="date-time">
       <span v-if="value === ''">Start Time</span>
       <span v-else>{{ value | moment("dd, MM YY, h:mm a") }}</span>
       <el-date-picker
+        :disabled="!matchData.home_team || !matchData.away_team"
         v-model="value"
         type="datetime"
         placeholder="Select date and time"
@@ -30,6 +31,7 @@ export default {
       type: Object,
       default: () => {}
     },
+    slotMatch: Number,
     selectWinner: Function
   },
   data() {
@@ -43,15 +45,13 @@ export default {
     checkedHome: function(value) {
       if(value) {
         this.checkedAway = false;
-        this.selectWinner(this.matchData.home_team, this.matchData);
-      } else {
+        this.selectWinner(this.matchData.home_team, this.matchData.away_team, this.matchData, this.slotMatch);
       }
     },
     checkedAway: function(value) {
       if(value) {
         this.checkedHome = false;
-        this.selectWinner(this.matchData.away_team, this.matchData)
-      } else {
+        this.selectWinner(this.matchData.away_team, this.matchData.home_team, this.matchData, this.slotMatch);
       }
     },
   }

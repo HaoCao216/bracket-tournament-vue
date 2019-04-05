@@ -32,6 +32,7 @@
               :matchData="match"
               :selectWinner="selectWinner"
               :key="key"
+              :slotMatch="key"
             />
           </div>
         </div>
@@ -48,6 +49,7 @@
                 :matchData="match"
                 :key="key"
                 :selectWinner="selectWinner"
+                :slotMatch="key"
               />
             </div>
           </div>
@@ -109,7 +111,54 @@ export default {
       return Math.pow(2, Math.floor((this.roundNumberLower - (index + 1)) / 2));
     },
 
-    selectWinner(teamWinner, data) {
+    selectWinner(teamWinner, teamLoser, data, slot) {
+      if(data.bracket_type === 'Upper Bracket' && data.round === 1) {
+        if(this.dataFormatLower[data.round - 1].length === this.dataFormatUpper[data.round - 1].length/2) {
+          if(slot%2 === 0) {
+            if(this.dataFormatLower[data.round - 1][Math.floor( slot/2 )].home_team === null) {
+              this.dataFormatLower[data.round - 1][Math.floor( slot/2 )].home_team = teamLoser;
+            } else {
+              this.dataFormatLower[data.round - 1][Math.floor( slot/2 )].away_team = teamLoser;
+            }
+          } else {
+            this.dataFormatLower[data.round - 1][Math.floor( slot/2 )].away_team = teamLoser;
+          }
+        }
+        if(this.dataFormatLower[data.round - 1].length === this.dataFormatUpper[data.round - 1].length) {
+          if(slot%2 === 0) {
+            if(this.dataFormatLower[data.round - 1][Math.floor( slot )].home_team === null) {
+              this.dataFormatLower[data.round - 1][Math.floor( slot )].home_team = teamLoser;
+            } else {
+              this.dataFormatLower[data.round - 1][Math.floor( slot )].away_team = teamLoser;
+            }
+          } else {
+            this.dataFormatLower[data.round - 1][Math.floor( slot )].away_team = teamLoser;
+          }
+        }
+      } else if(data.bracket_type === 'Upper Bracket') {
+        if(this.dataFormatLower[data.round*2 - 3].length === this.dataFormatUpper[data.round - 1].length/2) {
+          if(slot%2 === 0) {
+            if(this.dataFormatLower[data.round*2 - 3][Math.floor( slot/2 )].home_team === null) {
+              this.dataFormatLower[data.round*2 - 3][Math.floor( slot/2 )].home_team = teamLoser;
+            } else {
+              this.dataFormatLower[data.round*2 - 3][Math.floor( slot/2 )].away_team = teamLoser;
+            }
+          } else {
+            this.dataFormatLower[data.round*2 - 3][Math.floor( slot/2 )].away_team = teamLoser;
+          }
+        }
+        if(this.dataFormatLower[data.round*2 - 3].length === this.dataFormatUpper[data.round - 1].length) {
+          if(slot%2 === 0) {
+            if(this.dataFormatLower[data.round*2 - 3][Math.floor( slot )].home_team === null) {
+              this.dataFormatLower[data.round*2 - 3][Math.floor( slot )].home_team = teamLoser;
+            } else {
+              this.dataFormatLower[data.round*2 - 3][Math.floor( slot )].away_team = teamLoser;
+            }
+          } else {
+            this.dataFormatLower[data.round*2 - 3][Math.floor( slot )].away_team = teamLoser;
+          }
+        }
+      }
       this.matchData.find((item, index) => {
         if (data.parent === item.uuid) {
           if (data.home_team === this.matchData[index].home_team) {
