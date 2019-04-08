@@ -1,12 +1,30 @@
 <template>
   <div class="match">
     <div class="match-team">
-      <div class="select-team-winner">
-        <div v-bind:class="['home-team article', checkedHome ? 'is-winner' : '']">{{matchData.home_team || 'Up coming'}}</div>
+      <div
+        :draggable="matchData.round === 1 && matchData.bracket_type === 'Upper Bracket'"
+        @drop="drop(matchData.home_team, 'home_team', slotMatch, checkedAway, checkedHome)"
+        @dragover="allowDrop"
+        :id="matchData.home_team"
+        @dragstart="drag(matchData.home_team, 'home_team', slotMatch, checkedAway, checkedHome)"
+        class="select-team-winner"
+      >
+        <div
+          v-bind:class="['home-team article', checkedHome ? 'is-winner' : '']"
+        >{{matchData.home_team || 'Up coming'}}</div>
         <el-checkbox v-model="checkedHome" :disabled="!matchData.home_team || value === ''"/>
       </div>
-      <div class="select-team-winner away-group">
-        <div  v-bind:class="['away-team article', checkedAway ? 'is-winner' : '']">{{matchData.away_team || 'Up coming'}}</div>
+      <div
+        :draggable="matchData.round === 1 && matchData.bracket_type === 'Upper Bracket'"
+        @drop="drop(matchData.away_team, 'away_team', slotMatch, checkedAway, checkedHome)"
+        @dragover="allowDrop"
+        :id="matchData.away_team"
+        @dragstart="drag(matchData.away_team, 'away_team', slotMatch, checkedAway, checkedHome)"
+        class="select-team-winner away-group"
+      >
+        <div
+          v-bind:class="['away-team article', checkedAway ? 'is-winner' : '']"
+        >{{matchData.away_team || 'Up coming'}}</div>
         <el-checkbox v-model="checkedAway" :disabled="!matchData.away_team || value === ''"/>
       </div>
     </div>
@@ -27,6 +45,9 @@
 <script>
 export default {
   props: {
+    allowDrop: Function,
+    drag: Function,
+    drop: Function,
     matchData: {
       type: Object,
       default: () => {}
@@ -43,17 +64,27 @@ export default {
   },
   watch: {
     checkedHome: function(value) {
-      if(value) {
+      if (value) {
         this.checkedAway = false;
-        this.selectWinner(this.matchData.home_team, this.matchData.away_team, this.matchData, this.slotMatch);
+        this.selectWinner(
+          this.matchData.home_team,
+          this.matchData.away_team,
+          this.matchData,
+          this.slotMatch
+        );
       }
     },
     checkedAway: function(value) {
-      if(value) {
+      if (value) {
         this.checkedHome = false;
-        this.selectWinner(this.matchData.away_team, this.matchData.home_team, this.matchData, this.slotMatch);
+        this.selectWinner(
+          this.matchData.away_team,
+          this.matchData.home_team,
+          this.matchData,
+          this.slotMatch
+        );
       }
-    },
+    }
   }
 };
 </script>

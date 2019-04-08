@@ -28,6 +28,9 @@
             :key="index"
           >
             <match
+              :drag="drag"
+              :drop="drop"
+              :allowDrop="allowDrop"
               v-for="(match, key) in item"
               :matchData="match"
               :selectWinner="selectWinner"
@@ -64,12 +67,14 @@
 
 <script>
 import Match from "./components/Match.vue";
+import draggable from "vuedraggable";
 import { EightTeam, SixteenTeam, ThirtyThreeTeam } from "./seedData.js";
 
 export default {
   name: "app",
   components: {
-    Match
+    Match,
+    draggable
   },
   data() {
     return {
@@ -95,10 +100,29 @@ export default {
       ],
       dataFormatUpper: [],
       dataFormatLower: [],
-      dataFormatFinal: []
+      dataFormatFinal: [],
+      teamSelectSwap: '',
     };
   },
   methods: {
+    allowDrop(ev) {
+      ev.preventDefault();
+    },
+    drag(ev, type, slot, check_away, check_home) {
+      if(check_away || check_home) return;
+      this.teamSelectSwap = this.dataFormatUpper[0][slot][type];
+    },
+    drop(ev, type, slot, check_away, check_home) {
+      if(check_away || check_home) return;
+      this.dataFormatUpper[0].find(item => {
+        if(item['home_team'] === this.teamSelectSwap) {
+          item['home_team'] = this.dataFormatUpper[0][slot][type];
+        } else if(item['away_team'] === this.teamSelectSwap) {
+          item['away_team'] = this.dataFormatUpper[0][slot][type];
+        }
+      })
+      this.dataFormatUpper[0][slot][type] = this.teamSelectSwap;
+    },
     //Ham tinh so tran tai round thu INDEX o nhanh thang
 
     getMatchNumberUpperRound(index) {
@@ -232,7 +256,7 @@ export default {
         case "32":
           this.matchData = ThirtyThreeTeam;
           break;
-      };
+      }
       this.renderData()
     }
   }
@@ -507,5 +531,9 @@ export default {
       }
     }
   }
+}
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
 }
 </style>
